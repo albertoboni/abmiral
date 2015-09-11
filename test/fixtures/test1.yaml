@@ -1,0 +1,20 @@
+:soldiers:
+  - :name:        indie
+    :host:        54.187.174.62
+    :user:        ec2-user
+    :certificate: /Users/bonix/Web/certificates/aws-home.pem
+
+:battle_plans:
+  - :name:    homepage2
+    :url:     http://www.poupabrasil.com.br/
+    :date:    2015-09-10 19:30
+    :delay:   5
+    :orders:
+      - :requests:    1000
+        :concurrency: 100
+
+      - :requests:    1000
+        :concurrency: 200
+
+      - :requests:    1000
+        :concurrency: 300

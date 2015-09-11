@@ -1,20 +1,20 @@
 require "abmiral/version"
 
 require 'abmiral/soldier'
-require 'abmiral/battle_plans'
-require 'abmiral/orders'
+require 'abmiral/battle_plan'
+require 'abmiral/order'
 
 module Abmiral
 
   def self.battle_plans(config)
     Array(config).map do |c|
 
-      Abmiral::BattlePlans.new do
+      Abmiral::BattlePlan.new do
         self.name    = c[:name]
         self.url     = c[:url]
         self.date    = c[:date]
         self.delay   = c[:delay]
-        self.attacks = c[:attacks]
+        self.orders  = c[:orders]
       end
 
     end

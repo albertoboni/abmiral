@@ -12,4 +12,6 @@ Net::SSH.start(host, 'ec2-user', :keys_only => true, :keys => [key]) do |ssh|
   puts ssh.exec! "cd git"
   puts ssh.exec! "pwd"
 end
+
+
 # ab -r -e /home/ec2-user/poupabrasil-benchmark/home.NOCACHE.1000-150.aws-test1.csv -n 1000 -c 150 http://pb.poupabrasil.com.br/

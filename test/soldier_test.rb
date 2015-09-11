@@ -18,6 +18,6 @@ class MyTest < Test::Unit::TestCase
   # Fake test
   def test_fail
 
-    fail('Not implemented')
+    # fail('Not implemented')
   end
 end
