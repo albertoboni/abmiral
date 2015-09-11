@@ -1,0 +1,17 @@
+#!/usr/bin/env ruby
+
+require "bundler/setup"
+require 'yaml'
+require 'pp'
+
+require 'abmiral'
+
+
+config = YAML.load_file File.expand_path('../config/config.yaml', __dir__)
+
+
+
+battle_plans = Abmiral.battle_plans config[:battle_plans]
+soldiers     = Abmiral.soldiers     config[:soldiers], battle_plans
+
+puts soldiers[0].inspect

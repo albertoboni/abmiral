@@ -1,0 +1,15 @@
+#!/usr/bin/env ruby
+
+require 'net/ssh'
+
+puts '123'
+
+host = '54.187.174.62'
+user = 'ec2-user'
+key  = '/Users/bonix/Web/certificates/aws-home.pem'
+
+Net::SSH.start(host, 'ec2-user', :keys_only => true, :keys => [key]) do |ssh|
+  puts ssh.exec! "cd git"
+  puts ssh.exec! "pwd"
+end
+# ab -r -e /home/ec2-user/poupabrasil-benchmark/home.NOCACHE.1000-150.aws-test1.csv -n 1000 -c 150 http://pb.poupabrasil.com.br/
