@@ -16,7 +16,6 @@ class OrderTest < Test::Unit::TestCase
     # Do nothing
   end
 
-  # Fake test
   def test_new
 
     order = Abmiral::Order.new 'attack_name', 'http://www.google.com/', '2015-06-14 10:50', 1000, 50

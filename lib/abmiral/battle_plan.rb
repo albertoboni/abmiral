@@ -18,28 +18,49 @@ module Abmiral
     def initialize(name, url, date, delay, orders_config = [])
       date = Time.parse(date) unless date.is_a? Time
 
-      @name  = name
-      @url   = url
-      @date  = date
-      @delay = delay
+      @name   = name
+      @url    = url
+      @date   = date
+      @delay  = delay
+      @orders = []
 
-      Array(orders_config).each { |c| add_order(c[:requests], c[:concurrency]) }
+      self.add_orders(orders_config)
+    end
+
+
+    # Shortcut to add_orders from the config
+    #
+    # @param [Array] orders   Array o hashes with the format {:requests => Fixnum, :concurrency => Fixnum }
+    # @return [Array]
+    def add_orders(orders)
+      orders.each { |c| add_order c[:requests], c[:concurrency] }
+      @orders
     end
 
 
     # Instantiates each order and stores in @orders
     #
-    # @param [String] requests    The total of requests to be made
-    # @param [String] concurrency The number of concurrent requests to be made
+    # @param [Fixnum] requests    The total of requests to be made
+    # @param [Fixnum] concurrency The number of concurrent requests to be made
     #
     # @return [Array]
     def add_order(requests, concurrency)
-      @orders     ||= []
       order_delayed_date = date + (delay * @orders.length * 60)
 
       @orders << Abmiral::Order.new(name, url, order_delayed_date, requests, concurrency)
     end
 
+
+    # Returns the complete crontab insertion for all orders for this battle plan
+    #
+    # @return [String]
+    def complete_briefing
+      output  = "\n"
+      output << "#### ABMIRAL BATTLE PLAN #{name}\n"
+      output << self.orders.map { |order| order.briefing }.join("\n") + "\n"
+      output << "#### ABMIRAL BATTLE PLAN END"
+      output
+    end
 
 
   end

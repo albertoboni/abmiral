@@ -7,7 +7,7 @@ class BattlePlanTest < Test::Unit::TestCase
   # Called before every test method runs. Can be used
   # to set up fixture information.
   def setup
-    @config_test1 = YAML.load_file File.expand_path('fixtures/test1.yaml', __dir__)
+    # @config_test1 = YAML.load_file File.expand_path('fixtures/test1.yaml', __dir__)
 
     # Do nothing
   end
@@ -47,6 +47,23 @@ class BattlePlanTest < Test::Unit::TestCase
     assert_equal '2015-06-14 10:10',          battle_plan.orders[0].date.strftime('%F %R')
     assert_equal '2015-06-14 10:15',          battle_plan.orders[1].date.strftime('%F %R')
     assert_equal '2015-06-14 10:20',          battle_plan.orders[2].date.strftime('%F %R')
+  end
+
+
+  def test_complete_briefing
+    battle_plan = Abmiral::BattlePlan.new 'test1', 'http://www.google.com/', '2015-06-14 10:10', 5
+
+    battle_plan.add_order 10000, 100
+    battle_plan.add_order 10000, 50
+    battle_plan.add_order 10000, 10
+
+    briefing = "
+#### ABMIRAL BATTLE PLAN test1
+10 10 14 6 0 ab -r -e test1.10000-100.csv -n 10000 -c 100 http://www.google.com/
+15 10 14 6 0 ab -r -e test1.10000-50.csv -n 10000 -c 50 http://www.google.com/
+20 10 14 6 0 ab -r -e test1.10000-10.csv -n 10000 -c 10 http://www.google.com/
+#### ABMIRAL BATTLE PLAN END"
+    assert_equal briefing.squeeze(' '), battle_plan.complete_briefing.squeeze(' ')
   end
 
 end

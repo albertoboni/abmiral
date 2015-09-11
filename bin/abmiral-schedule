@@ -12,6 +12,6 @@ config = YAML.load_file File.expand_path('../config/config.yaml', __dir__)
 
 
 battle_plans = Abmiral.battle_plans config[:battle_plans]
-soldiers     = Abmiral.soldiers     config[:soldiers], battle_plans
+soldiers     = Abmiral.soldiers config[:soldiers]
 
-puts soldiers[0].inspect
+soldiers.map! { |soldier| soldier.add_battle_plans(battle_plans) }
