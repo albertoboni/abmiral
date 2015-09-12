@@ -4,7 +4,7 @@ module Abmiral
   # It generates a single output csv file.
   class Order
 
-    attr_reader :name, :url, :date, :requests, :concurrency
+    attr_reader   :name, :url, :date, :requests, :concurrency, :hq
 
     # Well...
     #
@@ -13,7 +13,8 @@ module Abmiral
     # @param [String] date        The DateTime to run the test on
     # @param [String] requests    The total of requests to be made
     # @param [String] concurrency The number of concurrent requests to be made
-    def initialize(name, url, date, requests, concurrency)
+    # @param [String] hq          Were all the outputs should go to
+    def initialize(name, url, date, requests, concurrency, hq)
       date = Time.parse(date) unless date.is_a? Time
 
       @name        = name
@@ -21,6 +22,15 @@ module Abmiral
       @requests    = requests
       @concurrency = concurrency
       @date        = date
+      self.hq      = hq
+    end
+
+    # Setter for @hq, and makes sure the string ends with a trailing slash
+    #
+    # @param [String] hq
+    def hq=(hq)
+      @hq = String(hq)
+      @hq << '/' unless /\/\z/.match @hq
     end
 
 
@@ -42,7 +52,7 @@ module Abmiral
     #
     # @return [String]
     def export_file_name
-      "#{name}.#{requests}-#{concurrency}.csv"
+      "#{@hq}#{name}.#{requests}-#{concurrency}.csv"
     end
 
   end

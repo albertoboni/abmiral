@@ -9,9 +9,5 @@ require 'abmiral'
 
 config = YAML.load_file File.expand_path('../config/config.yaml', __dir__)
 
-
-
-battle_plans = Abmiral.battle_plans config[:battle_plans]
-soldiers     = Abmiral.soldiers config[:soldiers]
-
-soldiers.map! { |soldier| soldier.add_battle_plans(battle_plans) }
+# Deploy these bad boys
+Abmiral.deploy_troops config

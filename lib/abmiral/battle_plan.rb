@@ -7,7 +7,7 @@ module Abmiral
   # between each order to start.
   class BattlePlan
 
-    attr_reader :name, :url, :date, :delay, :orders
+    attr_reader   :name, :url, :date, :delay, :orders, :hq
 
 
     # @param [String] name        The test name
@@ -33,7 +33,7 @@ module Abmiral
     # @param [Array] orders   Array o hashes with the format {:requests => Fixnum, :concurrency => Fixnum }
     # @return [Array]
     def add_orders(orders)
-      orders.each { |c| add_order c[:requests], c[:concurrency] }
+      orders.each { |c| add_order c[:requests], c[:concurrency], @hq }
       @orders
     end
 
@@ -44,10 +44,22 @@ module Abmiral
     # @param [Fixnum] concurrency The number of concurrent requests to be made
     #
     # @return [Array]
-    def add_order(requests, concurrency)
+    def add_order(requests, concurrency, hq)
       order_delayed_date = date + (delay * @orders.length * 60)
 
-      @orders << Abmiral::Order.new(name, url, order_delayed_date, requests, concurrency)
+      @orders << Abmiral::Order.new(name, url, order_delayed_date, requests, concurrency, hq)
+    end
+
+
+    # The setter for the operations hq
+    #
+    # @param [String] hq
+    def hq=(hq)
+      @hq = hq
+      @orders.map! do |order|
+        order.hq = @hq
+        order
+      end
     end
 
 
