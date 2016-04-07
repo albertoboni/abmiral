@@ -30,25 +30,18 @@ module Abmiral
     soldiers.each do |soldier|
       Net::SSH.start(soldier.host, soldier.user, :keys_only => true, :keys => [soldier.certificate]) do |ssh|
 
-        # makes a dir for the deployment
-        puts ssh.exec! "mkdir #{soldier.hq}"
+        deployment_file  =  "#{soldier.hq}abmiral-deployment"
+        crontab_bkp_file =  "#{soldier.hq}crontab-bkp"
 
-        # make a backup of the crontab
-        crontab_bkp_file = "#{soldier.hq}crontab-bkp"
-        ssh.exec! "crontab -l > #{crontab_bkp_file}"
+        puts ssh.exec!      "mkdir #{soldier.hq}"                         # makes a dir for the deployment
+        ssh.exec!           "crontab -l > #{crontab_bkp_file}"            # make a backup of the crontab
+        puts ssh.exec!      "cp #{crontab_bkp_file} #{deployment_file}"   # make a copy of the crontab and add the complete briefing
 
-        # make a copy of the crontab and add the complete briefing
-        deployment_file  = "#{soldier.hq}abmiral-deployment"
-        puts ssh.exec! "cp #{crontab_bkp_file} #{deployment_file}"
-
-        # add the deployment to the new file and install it
         soldier.brief_battle_plans.split("\n").each do |line|
-          ssh.exec! "echo #{line} >> #{deployment_file}"
+          ssh.exec!         "echo #{line} >> #{deployment_file}"          # add the deployment to the new file and install it
         end
 
-        # add the crontab
-        puts ssh.exec! "crontab #{deployment_file}"
-
+        puts ssh.exec!      "crontab #{deployment_file}"                  # add the crontab
       end
     end
   end
